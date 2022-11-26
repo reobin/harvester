@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -e
+
+BREAK_LINE="
+"
+
+if ! docker --version >/dev/null 2>&1; then
+  echo "Please install Docker Desktop"
+  echo "https://www.docker.com/products/docker-desktop/"
+  exit 1
+fi
+
+if ! docker info >/dev/null 2>&1; then
+  echo "Please run Docker Desktop"
+  echo "https://docs.docker.com/desktop/"
+  exit 1
+fi
+
+dotenv_file="bin/deploy/.env"
+if test -f "$dotenv_file"; then
+  echo "${BREAK_LINE}Sourcing $dotenv_file"
+  source $dotenv_file
+fi;
+
+echo "${BREAK_LINE}Logging in to ECR"
+aws ecr get-login-password --region us-east-1 --profile $AWS_PROFILE | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+echo "${BREAK_LINE}Building the docker image"
+docker build -t harvester .
+
+echo "${BREAK_LINE}Tagging the image"
+docker tag harvester:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/harvester:latest
+
+echo "${BREAK_LINE}Pushing the image to the registry"
+docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/harvester:latest

@@ -1,4 +1,3 @@
-true
 import Config
 
 config :harvester, :harvest,
