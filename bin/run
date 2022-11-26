@@ -8,6 +8,8 @@ end
 
 alias Harvester.Modules.Harvest
 
+alias Harvester.Helpers.Date
+
 env = Dotenv.load!() |> then(& &1.values)
 
 if is_nil(env["HARVEST_ACCOUNT_ID"]) or is_nil(env["HARVEST_API_TOKEN"]) do
@@ -16,14 +18,14 @@ if is_nil(env["HARVEST_ACCOUNT_ID"]) or is_nil(env["HARVEST_API_TOKEN"]) do
 end
 
 %{"HARVEST_ACCOUNT_ID" => account_id, "HARVEST_API_TOKEN" => api_token} = env
+auth = %{account_id: account_id, api_token: api_token}
 
-user = Harvest.get_authenticated_user!(account_id, api_token)
+user = Harvest.get_authenticated_user!(auth)
 
-IO.inspect(user.id)
+IO.puts("Hello, #{user.first_name} #{user.last_name}!")
 
+{first_day, last_day} = Date.get_current_month_range()
 
-
-
-
-
-
+auth
+|> Harvest.list_time_entries!(from: first_day, to: last_day, user_id: user.id)
+|> IO.inspect()
