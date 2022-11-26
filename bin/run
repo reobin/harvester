@@ -1,23 +1,16 @@
 #!/usr/bin/env elixir
 
-if not File.exists?(".env") do
-  IO.puts("Please create a .env file at the root of the project.")
-  IO.puts("See .example.env for an example.")
-  System.halt(1)
-end
-
 alias Harvester.Modules.Harvest
 
 alias Harvester.Helpers.Date
 
-env = Dotenv.load!() |> then(& &1.values)
+[account_id: account_id, api_token: api_token] = Env.fetch!(:harvester, :harvest)
 
-if is_nil(env["HARVEST_ACCOUNT_ID"]) or is_nil(env["HARVEST_API_TOKEN"]) do
-  IO.puts("Please set HARVEST_ACCOUNT_ID and HARVEST_API_TOKEN in your .env file.")
+if is_nil(account_id) or is_nil(api_token) do
+  IO.puts("Please add missing values in config/secrets.exs")
   System.halt(1)
 end
 
-%{"HARVEST_ACCOUNT_ID" => account_id, "HARVEST_API_TOKEN" => api_token} = env
 auth = %{account_id: account_id, api_token: api_token}
 
 user = Harvest.get_authenticated_user!(auth)

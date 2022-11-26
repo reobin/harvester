@@ -7,21 +7,19 @@ defmodule Harvester.MixProject do
       version: "1.0.0",
       elixir: "~> 1.14",
       deps: [
-        {:dotenv, "~> 3.0.0"},
         {:httpoison, "~> 1.8.2"},
-        {:jason, "~> 1.4.0"}
+        {:jason, "~> 1.4.0"},
+        {:env, "~> 0.2"}
       ],
       aliases: aliases()
     ]
   end
 
   def application do
-    [extra_applications: [:logger]]
+    [applications: [:env, :httpoison, :jason]]
   end
 
   defp aliases do
-    [
-      "harvester.run": "run bin/run"
-    ]
+    ["harvester.run": "run bin/run"]
   end
 end
