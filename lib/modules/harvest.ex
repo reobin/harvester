@@ -23,7 +23,7 @@ defmodule Harvester.Modules.Harvest do
   @doc """
   Returns all time entries based on parameters.
   """
-  @spec list_time_entries!(auth, map()) :: [time_entry]
+  @spec list_time_entries!(auth, list()) :: [time_entry]
   def list_time_entries!(auth, options \\ []) do
     default_options = %{user_id: nil, from: "2022-01-01", to: "2023-01-01", page: 1}
     params = Enum.into(options, default_options)
