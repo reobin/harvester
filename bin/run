@@ -22,10 +22,14 @@ auth = %{account_id: account_id, api_token: api_token}
 
 user = Harvest.get_authenticated_user!(auth)
 
-IO.puts("Hello, #{user.first_name} #{user.last_name}!")
+IO.puts("Hello, #{user.first_name} #{user.last_name} (#{user.id})!")
 
 {first_day, last_day} = Date.get_current_month_range()
 
-auth
-|> Harvest.list_time_entries!(from: first_day, to: last_day, user_id: user.id)
-|> IO.inspect()
+total_hours =
+  auth
+  |> Harvest.list_time_entries!(from: first_day, to: last_day, user_id: user.id)
+  |> Enum.map(& &1.hours)
+  |> Enum.sum()
+
+IO.puts("You worked #{total_hours} hours this month.")
