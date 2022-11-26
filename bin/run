@@ -1,3 +1,10 @@
-#! /usr/bin/env elixir
+#!/usr/bin/env elixir
 
-IO.puts("Hello, World!")
+if not File.exists?(".env") do
+  IO.puts("Please create a .env file at the root of the project.")
+  IO.puts("See .example.env for an example.")
+  System.halt(1)
+end
+
+%{"HARVEST_API_TOKEN" => _harvest_api_token} =
+  Dotenv.load!() |> then(fn result -> result.values end) |> IO.inspect()
