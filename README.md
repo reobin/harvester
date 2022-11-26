@@ -28,3 +28,17 @@ Run the script:
 ```sh
 mix harvester.run
 ```
+
+## Get started (docker)
+
+Build the container:
+
+```sh
+docker build -t harvester .
+```
+
+Run the script:
+
+```sh
+docker run harvester
+```
