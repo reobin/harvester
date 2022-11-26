@@ -31,5 +31,6 @@ total_hours =
   |> Harvest.list_time_entries!(from: first_day, to: last_day, user_id: user.id)
   |> Enum.map(& &1.hours)
   |> Enum.sum()
+  |> Float.round(2)
 
-IO.puts("You worked #{total_hours} hours this month.")
+IO.puts("You worked #{total_hours} hours this month (#{Date.get_current_month()}).")
