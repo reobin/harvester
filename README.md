@@ -1,8 +1,17 @@
 # Harvester
 
-Generate an invoice from time logged in [Harvest](https://www.getharvest.com/).
+- [Harvester](#harvester)
+  - [Requirements](#requirements)
+    - [Harvest API](#harvest-api)
+  - [Get started](#get-started)
+  - [Get started (docker)](#get-started--docker-)
 
-## Set up
+## Requirements
+
+- [mix (elixir)](https://elixir-lang.org/install.html)
+  - or [Docker](https://docs.docker.com/get-docker/)
+
+### Harvest API
 
 Some variables are needed for this script to authenticate to the Harvest API:
 
