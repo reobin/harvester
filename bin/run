@@ -6,5 +6,24 @@ if not File.exists?(".env") do
   System.halt(1)
 end
 
-%{"HARVEST_API_TOKEN" => _harvest_api_token} =
-  Dotenv.load!() |> then(fn result -> result.values end) |> IO.inspect()
+alias Harvester.Modules.Harvest
+
+env = Dotenv.load!() |> then(& &1.values)
+
+if is_nil(env["HARVEST_ACCOUNT_ID"]) or is_nil(env["HARVEST_API_TOKEN"]) do
+  IO.puts("Please set HARVEST_ACCOUNT_ID and HARVEST_API_TOKEN in your .env file.")
+  System.halt(1)
+end
+
+%{"HARVEST_ACCOUNT_ID" => account_id, "HARVEST_API_TOKEN" => api_token} = env
+
+user = Harvest.get_authenticated_user!(account_id, api_token)
+
+IO.inspect(user.id)
+
+
+
+
+
+
+

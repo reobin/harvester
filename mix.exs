@@ -8,7 +8,8 @@ defmodule Harvester.MixProject do
       elixir: "~> 1.14",
       deps: [
         {:dotenv, "~> 3.0.0"},
-        {:httpoison, "~> 1.8.2"}
+        {:httpoison, "~> 1.8.2"},
+        {:jason, "~> 1.4.0"}
       ],
       aliases: aliases()
     ]
