@@ -17,7 +17,8 @@ user = Harvest.get_authenticated_user!(auth)
 
 IO.puts("Hello, #{user.first_name} #{user.last_name} (#{user.id})!")
 
-{first_day, last_day} = Date.get_current_month_range()
+previous_month = Date.get_previous_month()
+{first_day, last_day} = Date.get_month_range(previous_month)
 
 total_hours =
   auth
@@ -26,4 +27,4 @@ total_hours =
   |> Enum.sum()
   |> Float.round(2)
 
-IO.puts("You worked #{total_hours} hours this month (#{Date.get_current_month()}).")
+IO.puts("You worked #{total_hours} hours in month #{Date.format(previous_month, :short)}.")

@@ -17,12 +17,20 @@ defmodule Harvester.Modules.HTTP do
   @spec get!(String.t(), list(), map()) :: map()
   def get!(url, headers, params) do
     url
-    |> URI.parse()
-    |> Map.put(:query, URI.encode_query(params))
-    |> URI.to_string()
-    |> HTTPoison.get!([{"Accept", "application/json"} | headers])
-    |> then(& &1.body)
-    |> Jason.decode!()
-    |> MapHelper.atomize_keys()
+    |> add_query_params(params)
+    |> HTTPoison.get!(add_default_headers(headers))
+    |> decode_body()
   end
+
+  @type headers :: list({String.t(), String.t()})
+  @spec add_default_headers(headers) :: headers
+  defp add_default_headers(headers), do: [{"Accept", "application/json"} | headers]
+
+  @spec add_query_params(String.t(), map()) :: String.t()
+  defp add_query_params(url, params),
+    do: url |> URI.parse() |> Map.put(:query, URI.encode_query(params)) |> URI.to_string()
+
+  @spec decode_body(map()) :: map()
+  defp decode_body(%{body: body}), do: body |> Jason.decode!() |> MapHelper.atomize_keys()
+  defp decode_body(_response), do: nil
 end
