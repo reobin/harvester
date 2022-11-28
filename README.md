@@ -1,10 +1,13 @@
 # Harvester
 
-- [Harvester](#harvester)
-  - [Requirements](#requirements)
-    - [Harvest API](#harvest-api)
-  - [Get started](#get-started)
-  - [Get started (docker)](#get-started--docker-)
+> Aggregate hours logged in Harvest in order to generate an invoice.
+
+## Table of contents
+
+- [Requirements](#requirements)
+  - [Harvest API](#harvest-api)
+- [Get started](#get-started)
+- [Get started (docker)](#get-started-docker)
 
 ## Requirements
 
