@@ -2,7 +2,7 @@
 
 alias Harvester.Modules.Harvest
 
-alias Harvester.Helpers.Date
+alias Harvester.Helpers.Date, as: DateHelper
 
 [account_id: account_id, api_token: api_token] = Env.fetch!(:harvester, :harvest)
 
@@ -17,8 +17,9 @@ user = Harvest.get_authenticated_user!(auth)
 
 IO.puts("Hello, #{user.first_name} #{user.last_name} (#{user.id})!")
 
-previous_month = Date.get_previous_month()
-{first_day, last_day} = Date.get_month_range(previous_month)
+month = DateHelper.from_args() || DateHelper.get_previous_month()
+
+{first_day, last_day} = DateHelper.get_month_range(month)
 
 total_hours =
   auth
@@ -27,4 +28,4 @@ total_hours =
   |> Enum.sum()
   |> Float.round(2)
 
-IO.puts("You worked #{total_hours} hours in month #{Date.format(previous_month, :short)}.")
+IO.puts("You worked #{total_hours} hours in month #{DateHelper.format(month, :short)}.")
