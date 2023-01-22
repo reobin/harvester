@@ -8,6 +8,7 @@
   - [Harvest API](#harvest-api)
 - [Get started](#get-started)
 - [Get started (docker)](#get-started-docker)
+- [CLI](#cli)
 
 ## Requirements
 
@@ -53,4 +54,18 @@ Run the script:
 
 ```sh
 docker run harvester
+```
+
+## CLI
+
+### Aggregate time entries for a specific month
+
+```sh
+mix harvester.run 2022-12 # get time entries for December 2022
+```
+
+### Aggregate time entries between two dates
+
+```sh
+mix harvester.run --from 2022-12-01 --to 2022-12-31
 ```

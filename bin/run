@@ -11,15 +11,42 @@ if is_nil(account_id) or is_nil(api_token) do
   System.halt(1)
 end
 
-auth = %{account_id: account_id, api_token: api_token}
+{args, month_arg, _} =
+  System.argv()
+  |> OptionParser.parse(switches: [help: :boolean, version: :boolean, from: :string, to: :string])
 
+if args[:version] do
+  IO.puts("harvester #{Mix.Project.config()[:version]}")
+  System.halt(0)
+end
+
+if args[:help] do
+  IO.puts("To run harvester for a specific month:")
+  IO.puts("mix harvester.run 2022-12\n")
+  IO.puts("To run harvester for a date range:")
+  IO.puts("mix harvester.run --from 2022-12-01 --to 2022-12-31")
+  System.halt(0)
+end
+
+auth = %{account_id: account_id, api_token: api_token}
 user = Harvest.get_authenticated_user!(auth)
 
 IO.puts("Hello, #{user.first_name} #{user.last_name} (#{user.id})!")
 
-month = DateHelper.from_args() || DateHelper.get_previous_month()
+{first_day, last_day} =
+  cond do
+    not is_nil(args[:from]) and not is_nil(args[:to]) ->
+      {Date.from_iso8601!(args[:from]), Date.from_iso8601!(args[:to])}
 
-{first_day, last_day} = DateHelper.get_month_range(month)
+    not is_nil(args[:from]) ->
+      {Date.from_iso8601!(args[:from]), Date.utc_today()}
+
+    Enum.count(month_arg) > 0 ->
+      month_arg |> Enum.at(0) |> DateHelper.parse_month!() |> DateHelper.month_range()
+
+    true ->
+      DateHelper.previous_month() |> DateHelper.month_range()
+  end
 
 total_hours =
   auth
@@ -28,4 +55,6 @@ total_hours =
   |> Enum.sum()
   |> Float.round(2)
 
-IO.puts("You worked #{total_hours} hours in month #{DateHelper.format(month, :short)}.")
+IO.puts(
+  "You worked #{total_hours} hours between #{DateHelper.format(first_day)} to #{DateHelper.format(last_day)}."
+)
