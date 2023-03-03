@@ -31,7 +31,8 @@ defmodule Harvester.Modules.Harvest do
     result = "#{@harvest_api_url}/time_entries" |> HTTP.get!(headers, params)
 
     if result.total_pages > result.page do
-      result.time_entries ++ list_time_entries!(auth, Map.put(params, :page, result.page + 1))
+      params = params |> Map.put(:page, result.page + 1) |> Map.to_list()
+      result.time_entries ++ list_time_entries!(auth, params)
     else
       result.time_entries
     end
